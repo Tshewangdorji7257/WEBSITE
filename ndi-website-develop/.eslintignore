@@ -1,0 +1,12 @@
+node_modules
+.env
+dist
+build
+src/models
+src/ui-components/*.d.ts
+src/ui-components/*.js.d.ts
+amplify-codegen-temp/models
+amplify/*
+src/models/models
+
+src\models\models

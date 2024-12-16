@@ -1,0 +1,425 @@
+type EventSignUp @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  firstName: String
+  lastName: String
+  organizationORCompany: String
+  designation: String
+  mobileNumber: Int
+  email: AWSEmail
+  linkedInURL: String
+  eventName: String
+}
+
+type UseCases @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  title: String
+  image: String
+  websiteLink: String
+  list1: String
+  list2: String
+  list3: String
+  list4: String
+}
+
+type PostAnnouncement @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  title: String
+  content: String
+  createdAt: AWSDate
+  link: String
+  isSignUp: Boolean
+}
+
+enum ServicesType {
+  MISSION
+  VISSION
+  ORG_SERVICES
+}
+
+type Solutions @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  title: String
+  description: String
+  image: String
+  URL: String
+  logo: String
+  isActive: Boolean
+  order: String
+  contentID: ID! @index(name: "byContent")
+}
+
+type Services @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  title: String
+  description: String
+  image: String
+  URL: String
+  logo: String
+  isActive: Boolean
+  order: Int
+  contentID: ID! @index(name: "byContent")
+  serviceType: ServicesType
+  altText: String
+}
+
+type GovernanceDocs @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  language: String
+  source: String
+  order: Int
+  isActive: Boolean
+  governanceframeworkID: ID @index(name: "byGovernanceFramework")
+}
+
+type GovernanceFramework @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  title: String
+  description: String
+  date: AWSDate
+  isNDI: Boolean
+  order: Int
+  isActive: Boolean
+  governanceDocs: [GovernanceDocs] @hasMany(indexName: "byGovernanceFramework", fields: ["id"])
+  keywords: String
+  viewPort: String
+  author: String
+  publisher: String
+  canonical: String
+}
+
+enum CustomComponentName {
+  LANDING_NEW_AT_BHUTAN
+  CONACT_US_FORM
+}
+
+type FooterMenu @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  route: String
+  order: Int
+  isActive: Boolean
+  footersectionID: ID! @index(name: "byFooterSection")
+}
+
+type Glossary @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  letter: String
+  word: String
+  description: String
+  order: Int
+  isActive: Boolean
+}
+
+type Team @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  role: String
+  linkedInURL: String
+  InstaURL: String
+  Image: String
+  facebookURL: String
+  order: Int
+  isActive: Boolean
+}
+
+type SocialMedia @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  title: String
+  image: String
+  url: String
+  order: Int
+  isActive: Boolean
+}
+
+type FooterSection @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  title: String
+  order: Int
+  footerID: ID! @index(name: "byFooter")
+  footerMenu: [FooterMenu] @hasMany(indexName: "byFooterSection", fields: ["id"])
+  isActive: Boolean
+}
+
+type Footer @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  footerNote: String
+  footerSections: [FooterSection] @hasMany(indexName: "byFooter", fields: ["id"])
+  contactNo: Int
+  email: AWSEmail
+}
+
+enum TypeOfFAQ {
+  USER
+  ORGANIZATION
+}
+
+type FAQ @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  title: String
+  data: String
+  type: TypeOfFAQ
+  order: Int
+  isActive: Boolean
+}
+
+type Collaborator @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  image: AWSURL
+  title: String
+  order: Int
+  isActive: String
+  contentID: ID @index(name: "byContent")
+}
+
+enum PostType {
+  BLOG
+  VACANCY_ANNOUNCEMENT
+  EVENT
+  WEBINAR
+  NEWS_UPDATE
+  MEDIA_COVERAGE
+  PUBLICATIONS
+}
+
+type Post @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  postType: PostType
+  title: String
+  shortDescription: String
+  description: String
+  image: String
+  order: Int
+  isActive: Boolean
+  publishDate: AWSDateTime
+  contentID: ID @index(name: "byContent")
+  url: String
+  dateOfEvent: AWSDateTime
+  author: String
+  keywords: String
+  viewPort: String
+  publisher: String
+  canonical: String
+  customizedURL: String
+  pdfURL: String
+}
+
+enum EnquiryReasonEnum {
+  APP_ISSUE
+  BUG_REPORT
+  BUSINESS_ENQUIRY
+  INTERNATIONAL_ENQUIRY
+  PRESS_ENQUIRY
+  USER_ENQUIRY_HELPDESK
+  OTHER
+}
+
+type EnquiryReason @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  reason: String
+  value: EnquiryReasonEnum
+  order: Int
+  isActive: Boolean
+}
+
+type Enquiries @model @auth(rules: [{allow: public, operations: [create]}]) {
+  id: ID!
+  firstName: String
+  lastName: String
+  email: AWSEmail!
+  subject: String
+  message: String
+  enquiryReason: String
+  organization: String
+  contactNumber: String
+  productInfo: String
+}
+
+enum PageKeys {
+  FEATURES
+  SOLUTIONS
+  PRODUCTS
+}
+
+enum TypeOfMedia {
+  IMAGE
+  VIDEO
+}
+
+type LandingPage @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  title: String
+  subTitle: String
+  leftSection: String
+  rightSection: String
+  type: String
+  order: Int
+  features: [Feature] @hasMany(indexName: "byLandingPage", fields: ["id"])
+  pageKey: PageKeys
+}
+
+type Feature @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  title: String
+  subTitle: String
+  image: String
+  order: Int
+  landingpageID: ID @index(name: "byLandingPage")
+  url: String
+  isActive: Boolean
+  contentID: ID @index(name: "byContent")
+  description: String
+}
+
+type SubMenus @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  route: String
+  menusID: ID @index(name: "byMenus")
+  order: Int
+  isActive: Boolean
+}
+
+type Menus @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  route: String
+  subMenus: [SubMenus] @hasMany(indexName: "byMenus", fields: ["id"])
+  order: Int
+  isActive: Boolean
+}
+
+type HeroSection @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  leftSection: String
+  rightSection: String
+  pageName: String
+  pageSectionNo: Int
+}
+
+type Media @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  type: TypeOfMedia
+  url: String
+  alt: String
+  order: Int
+  forUserID: ID @index(name: "byMedia")
+}
+
+type ForUser @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  title: String
+  subTitle: String
+  leftSection: String
+  rightSection: String
+  type: String
+  order: Int
+  Media: [Media] @hasMany(indexName: "byMedia", fields: ["id"])
+}
+
+enum ContentType {
+  TEXT
+  IMAGE
+  VIDEO
+  CAROUSEL
+  MARKDOWN
+  SIMPLE_LIST
+  MULTI_IMAGE_CAROUSEL
+  INFOGRAPHIC_IMAGE
+  CUSTOM
+}
+
+type Benefits @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  title: String
+  description: String
+  image: String
+  order: Int
+  isActive: Boolean
+  contentID: ID! @index(name: "byContent")
+}
+
+type Content @model @auth(rules: [{allow: public}]) {
+  navigate: String
+  contentType: ContentType
+  contentData: String
+  subsectionID: ID! @index(name: "bySubSection")
+  isActive: Boolean
+  posts: [Post] @hasMany(indexName: "byContent", fields: ["id"])
+  collaborators: [Collaborator] @hasMany(indexName: "byContent", fields: ["id"])
+  features: [Feature] @hasMany(indexName: "byContent", fields: ["id"])
+  id: ID!
+  order: Int
+  direction: Direction
+  Benefits: [Benefits] @hasMany(indexName: "byContent", fields: ["id"])
+  customComponent: String
+  Services: [Services] @hasMany(indexName: "byContent", fields: ["id"])
+  Solutions: [Solutions] @hasMany(indexName: "byContent", fields: ["id"])
+  noOfItemPerRow: Int
+}
+
+enum Direction {
+  HORIZONTAL
+  VERTICAL
+}
+
+type SubSection @model @auth(rules: [{allow: public}]) {
+  navigate: String
+  title: String
+  subTitle: String
+  order: Int
+  sectionID: ID! @index(name: "bySection")
+  contentDirection: Direction
+  contents: [Content] @hasMany(indexName: "bySubSection", fields: ["id"])
+  isActive: Boolean
+  id: ID!
+}
+
+enum PageNames {
+  HOME
+  FOR_USER
+  FOR_ORGANIZATION
+  ABOUT_US
+  MEDIA_COVERAGE
+  RESOURCE
+  BLOGS
+  CONTACT_US
+  GLOSSARY
+  CAREER
+  FEATURE_VIEWMORE
+  VISION_MISSION
+  BUSINESS_INQUIRY
+  FAQS
+  MEET_TEAM
+  GOVERNANCE
+  PRIVACY_POLICY
+  TERMS_OF_SERVICE
+  BACKUP_AND_RESTORE
+}
+
+type Section @model @auth(rules: [{allow: public}]) {
+  navigate: String
+  title: String
+  subTitle: String
+  pagesID: ID! @index(name: "byPages")
+  order: Int
+  subSections: [SubSection] @hasMany(indexName: "bySection", fields: ["id"])
+  isActive: Boolean
+  id: ID!
+  subSectionDirection: Direction
+  sectionType: String
+}
+
+type Pages @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  pageName: PageNames!
+  sections: [Section] @hasMany(indexName: "byPages", fields: ["id"])
+  isActive: Boolean
+  title: String
+  description: String
+  keywords: String
+  viewPort: String
+  author: String
+  publisher: String
+  canonical: String
+}
+ 
